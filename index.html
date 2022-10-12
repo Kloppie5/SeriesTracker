@@ -1,8 +1,97 @@
 <html>
   <head>
+    <script>
+      class Interval {
+        constructor ( name, start, end, color ) {
+          this.name = name;
+          this.start = start;
+          this.end = end;
+          this.color = color;
+        }
+      }
+      class Series {
+        constructor ( name, progress, max, intervals ) {
+          this.name = name;
+          this.progress = progress;
+          this.max = max;
+          this.intervals = intervals;
+        }
 
+        toDOM () {
+          var entry = document.createElement ("div");
+          entry.className = "entry";
+
+          var nameDiv = document.createElement ("div");
+          nameDiv.className = "name";
+          nameDiv.innerHTML = this.name;
+          entry.appendChild (nameDiv);
+
+          var progressDiv = document.createElement ("div");
+          progressDiv.className = "progress";
+          progressDiv.innerHTML = this.progress;
+          entry.appendChild (progressDiv);
+
+          var maxDiv = document.createElement ("div");
+          maxDiv.className = "max";
+          maxDiv.innerHTML = this.max;
+          entry.appendChild (maxDiv);
+
+          var svg = document.createElementNS ("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute ("viewBox", "0 0 " + this.max + " 20");
+          svg.setAttribute ("width", this.max);
+          svg.setAttribute ("height", "20");
+
+          var rect = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute ("x", "0");
+          rect.setAttribute ("y", "0");
+          rect.setAttribute ("width", this.max);
+          rect.setAttribute ("height", "20");
+          rect.setAttribute ("fill", "grey");
+          svg.appendChild (rect);
+
+          for ( var i = 0; i < this.intervals.length; i++ ) {
+            var interval = this.intervals[i];
+            if ( interval.start > this.progress )
+              break;
+            var rect = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute ("x", interval.start);
+            rect.setAttribute ("y", "0");
+            rect.setAttribute ("width", Math.min(interval.end, this.progress) - interval.start);
+            rect.setAttribute ("height", "20");
+            rect.setAttribute ("fill", interval.color);
+            svg.appendChild (rect);
+
+            var text = document.createElementNS ("http://www.w3.org/2000/svg", "text");
+            text.setAttribute ("x", interval.start);
+            text.setAttribute ("y", "15");
+            text.setAttribute ("font-size", "10");
+            text.setAttribute ("fill", "black");
+            text.innerHTML = interval.name;
+            svg.appendChild (text);
+          }
+
+          entry.appendChild (svg);
+
+          return entry;
+        }
+      }
+    </script>
+    <script>
+      const series = [
+        new Series ( "One-Punch Man", 3, 171, [
+          new Interval ( "Pending", 0, 3, "green" ),
+        ])
+      ]
+    </script>
   </head>
   <body>
-    Hello Again~
+    <script>
+      document.addEventListener ("DOMContentLoaded", function () {
+        for ( let i = 0; i < series.length; ++i ) {
+          document.body.appendChild (series[i].toDOM());
+        }
+      });
+    </script>
+    <div id="entries"></div>
   </body>
 </html>
