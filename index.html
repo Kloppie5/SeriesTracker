@@ -54,9 +54,9 @@
             if ( interval.start > this.progress )
               break;
             var rect = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute ("x", interval.start);
+            rect.setAttribute ("x", interval.start - 1);
             rect.setAttribute ("y", "0");
-            rect.setAttribute ("width", Math.min(interval.end, this.progress) - interval.start);
+            rect.setAttribute ("width", Math.min(interval.end, this.progress) - interval.start + 1);
             rect.setAttribute ("height", "20");
             rect.setAttribute ("fill", interval.color);
             svg.appendChild (rect);
@@ -78,8 +78,10 @@
     </script>
     <script>
       const series = [
-        new Series ( "One-Punch Man", 3, 171, [
-          new Interval ( "Pending", 0, 3, "green" ),
+        new Series ( "One-Punch Man", 12, 171, [
+          new Interval ( "Introduction", 1, 4, "green" ),
+            new Interval ( "House of Evolution", 5, 11, "green" ),
+            new Interval ( "Pending", 12, 12, "yellow" ),
         ])
       ]
     </script>
